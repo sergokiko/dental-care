@@ -2,6 +2,7 @@ import type { GetStaticProps, NextPage } from 'next';
 import { CntrlClient, TArticle, TProject, TPage } from '@cntrl-site/sdk-nextjs';
 import { Page, cntrlSdkContext } from '@cntrl-site/sdk-nextjs';
 import { TKeyframeAny, TTypePresets } from '@cntrl-site/core';
+import { Header } from '../components/Header/Header';
 
 const client = new CntrlClient(
   process.env.CNTRL_PROJECT_ID!,
@@ -22,12 +23,16 @@ const CntrlPage: NextPage<Props> = (props) => {
   cntrlSdkContext.setTypePresets(props.typePresets);
 
   return (
-    <Page
-      project={props.project}
-      article={props.article}
-      meta={meta}
-      keyframes={props.keyframes}
-    />
+    <>
+      <Header />
+      <Page
+        project={props.project}
+        article={props.article}
+        meta={meta}
+        keyframes={props.keyframes}
+      />
+    </>
+
   );
 }
 
