@@ -24,7 +24,7 @@ const CntrlPage: NextPage<Props> = (props) => {
 
   return (
     <>
-      <Header />
+      {/*<Header />*/}
       <Page
         project={props.project}
         article={props.article}

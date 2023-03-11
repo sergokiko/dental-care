@@ -4,7 +4,11 @@ export const Header = () => {
   return (
     <>
       <div className='header'>
-        header
+        <div className="header__left-side-links">
+          <a href="" className="header__link">Послуги</a>
+          <a href="" className="header__link">Лікарі</a>
+          <a href="" className="header__link">Галерея</a>
+        </div>
       </div>
       <style jsx>{`
         .header {
