@@ -12,7 +12,7 @@
   "dependencies": {
     "@cntrl-site/sdk-nextjs": "^1.0.17",
     "@splidejs/react-splide": "^0.7.12",
-    "next": "^14.2.5",
+    "next": "^14.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.2.0"
   },
@@ -23,6 +23,6 @@
     "eslint": "8.16.0",
     "eslint-config-next": "12.1.6",
     "sass": "^1.57.1",
-    "typescript": "^4.9.5"
+    "typescript": "^5.5.4"
   }
 }
