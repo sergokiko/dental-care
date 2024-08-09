@@ -1,75 +1,40 @@
 import type { GetStaticProps, NextPage } from 'next';
-import { CntrlClient, TArticle, TProject, TPage } from '@cntrl-site/sdk-nextjs';
-import { Page, cntrlSdkContext } from '@cntrl-site/sdk-nextjs';
-import { TKeyframeAny, TTypePresets } from '@cntrl-site/core';
-import { Header } from '../components/Header/Header';
+import { CntrlClient, Page, PageProps, cntrlSdkContext } from '@cntrl-site/sdk-nextjs';
 
-const client = new CntrlClient(
-  process.env.CNTRL_PROJECT_ID!,
-  process.env.CNTRL_API_URL!
-);
-
-interface Props {
-  article: TArticle;
-  project: TProject;
-  typePresets: TTypePresets;
-  page: TPage;
-  keyframes: TKeyframeAny[];
-}
-
-const CntrlPage: NextPage<Props> = (props) => {
-  const meta = CntrlClient.getPageMeta(props.project.meta, props.page.meta!);
-  cntrlSdkContext.setLayouts(props.project.layouts);
-  cntrlSdkContext.setTypePresets(props.typePresets);
-
-  return (
-    <>
-      {/*<Header />*/}
-      <Page
-        project={props.project}
-        article={props.article}
-        meta={meta}
-        keyframes={props.keyframes}
-      />
-    </>
-
-  );
-}
+const client = new CntrlClient(process.env.CNTRL_API_URL!);
 
 type ParamsWithSlug = {
   slug: string;
 };
 
-export const getStaticProps: GetStaticProps<Props, ParamsWithSlug> = async ({ params }) => {
+const CntrlPage: NextPage<PageProps> = (props) => {
+  cntrlSdkContext.init(props);
+  return (
+    <Page {...props} />
+  );
+}
+
+export const getStaticProps: GetStaticProps<PageProps, ParamsWithSlug> = async ({ params }) => {
   const originalSlug = params?.slug;
-  const slug = Array.isArray(originalSlug)
-    ? originalSlug.join('/')
-    : '';
-  const project = await client.getProject();
-  const article = await client.getPageArticle(slug);
-  const typePresets = await client.getTypePresets();
-  const keyframes = await client.getKeyframes(article.id);
-  const page = project.pages.find(page => page.slug === slug)!;
+  const slug = Array.isArray(originalSlug) ? originalSlug.join('/') : '';
+  const cntrlPageData = await client.getPageData(slug);
+  const sectionData = await cntrlSdkContext.resolveSectionData(cntrlPageData.article.sections);
 
   return {
     props: {
-      project,
-      article,
-      page,
-      typePresets,
-      keyframes
+      ...cntrlPageData,
+      sectionData
     }
-  }
+  };
 };
 
 export async function getStaticPaths() {
-  const res = await client.getProject();
-  const paths = res.pages
-    .map(page => ({
-      params: {
-        slug: [page.slug]
-      }
-    }));
+  const pagePaths = await client.getProjectPagesPaths();
+  const paths = pagePaths.map(path => ({
+    params: {
+      slug: path.split('/')
+    }
+  }));
   return { paths, fallback: false };
 }
 
