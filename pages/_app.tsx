@@ -1,7 +1,6 @@
 import '../styles/reset.scss';
 import type { AppProps } from 'next/app';
 import { CntrlProvider, cntrlSdkContext } from '@cntrl-site/sdk-nextjs';
-import { Slider } from '../components/Slider/Slider';
 import { Gellery } from '../components/Gellery/Gellery';
 
 // place for your custom items definitions
